@@ -19,7 +19,7 @@ const FileUpload = () => {
       setUploadPercentage(100);
       setMessage('File Uploaded');
     } catch (error) {
-      setMessage('something goes wrong');
+      setMessage('something went wrong');
     }
   };
 
