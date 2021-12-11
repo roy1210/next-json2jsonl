@@ -43,6 +43,7 @@ const FileUpload = () => {
             type="file"
             name="myImage"
             className="custom-file-input"
+            style={{ cursor: 'pointer' }}
             onChange={uploadToClient}
           />
           <label className="custom-file-label" htmlFor="customFile">
