@@ -10,26 +10,28 @@ const FileUpload = () => {
   const [isUpload, setIsUpload] = useState(false);
 
   const uploadToClient = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const i = event.target.files[0];
-
-      setImage(i);
-      setCreateObjectURL(URL.createObjectURL(i));
+    try {
+      if (event.target.files && event.target.files[0]) {
+        const i = event.target.files[0];
+        setImage(i);
+      }
+      setFilename(event.target.files[0].name);
+      setUploadPercentage(100);
+      setMessage('File Uploaded');
+    } catch (error) {
+      setMessage('something goes wrong');
     }
-    setFile(event.target.files[0]);
-    setFilename(event.target.files[0].name);
-    setIsUpload(true);
-    setUploadPercentage(100);
-    setMessage('File Uploaded');
   };
 
   const uploadToServer = async (event) => {
+    event.preventDefault();
     const body = new FormData();
     body.append('file', image);
     await fetch('/api/file', {
       method: 'POST',
       body,
     });
+    setIsUpload(true);
   };
 
   return (
