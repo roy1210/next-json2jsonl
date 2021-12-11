@@ -52,11 +52,13 @@ const FileUpload = () => {
         </div>
 
         <Progress percentage={uploadPercentage} />
-        <input
-          type="submit"
-          value="Upload"
-          className="btn btn-primary btn-block mt-4"
-        />
+        {uploadPercentage === 100 && (
+          <input
+            type="submit"
+            value="Upload"
+            className="btn btn-primary btn-block mt-4"
+          />
+        )}
       </form>
 
       {isUpload && (
