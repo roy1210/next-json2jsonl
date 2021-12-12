@@ -18,20 +18,23 @@ const post = async (req, res) => {
 
 const saveFile = async (file) => {
   try {
-    const data = fs.readFileSync(file.path);
-    fs.writeFileSync(`./public/in.json`, data);
-    fs.createReadStream(`./public/in.json`)
-      .pipe(jsonl())
-      .pipe(fs.createWriteStream(`./public/out.jsonl`));
-    return;
+    return new Promise((resolve) => {
+      const data = fs.readFileSync(file.path);
+      fs.writeFileSync(`./public/in.json`, data);
+      fs.createReadStream(`./public/in.json`)
+        .pipe(jsonl())
+        .pipe(fs.createWriteStream(`./public/out.jsonl`));
+      resolve(true);
+      return;
+    });
   } catch (e) {
     console.log(e);
   }
 };
 
 const deleteFile = async (req, res) => {
-  fs.unlinkSync(`./public/in.json`);
-  fs.unlinkSync(`./public/out.jsonl`);
+  const files = [`./public/in.json`, `./public/out.jsonl`];
+  files.forEach((path) => fs.existsSync(path) && fs.unlinkSync(path));
   return res.status(201).send('');
 };
 

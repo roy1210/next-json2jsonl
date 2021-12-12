@@ -4,7 +4,7 @@ import Message from './Message';
 import Progress from './Progress';
 
 const FileUpload = () => {
-  const [file, setFile] = useState(null);
+  const [image, setImage] = useState(null);
   const [filename, setFilename] = useState('Choose File');
   const [message, setMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -13,7 +13,7 @@ const FileUpload = () => {
     try {
       if (event.target.files && event.target.files[0]) {
         const i = event.target.files[0];
-        setFile(i);
+        setImage(i);
       }
       setFilename(event.target.files[0].name);
       setUploadPercentage(100);
@@ -40,16 +40,13 @@ const FileUpload = () => {
 
   const uploadToServer = async (event) => {
     event.preventDefault();
-    try {
-      const body = new FormData();
-      body.append('file', file);
-      await axios.post('/api/file', body);
-      await download();
-      await axios.delete('/api/file');
-    } catch (error) {
-      setMessage('something went wrong');
-      await axios.delete('/api/file');
-    }
+    const body = new FormData();
+    body.append('file', image);
+    await axios.post('/api/file', body);
+    await download();
+    // setTimeout(async () => {
+    //   await axios.delete('/api/file');
+    // }, 500);
   };
 
   return (
@@ -59,7 +56,7 @@ const FileUpload = () => {
         <div className="custom-file mb-4">
           <input
             type="file"
-            name="myFile"
+            name="myImage"
             className="custom-file-input"
             style={{ cursor: 'pointer' }}
             onChange={uploadToClient}
