@@ -4,7 +4,7 @@ import Message from './Message';
 import Progress from './Progress';
 
 const FileUpload = () => {
-  const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
   const [filename, setFilename] = useState('Choose File');
   const [message, setMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -13,14 +13,10 @@ const FileUpload = () => {
     try {
       if (event.target.files && event.target.files[0]) {
         const i = event.target.files[0];
-        setImage(i);
+        setFile(i);
       }
       setFilename(event.target.files[0].name);
       setUploadPercentage(100);
-      setTimeout(() => {
-        document.body.getElementsByClassName('upload-btn')[0].click();
-      }, 3000);
-      setMessage('Success!!');
     } catch (error) {
       setMessage('something went wrong');
       await axios.delete('/api/file');
@@ -44,11 +40,16 @@ const FileUpload = () => {
 
   const uploadToServer = async (event) => {
     event.preventDefault();
-    const body = new FormData();
-    body.append('file', image);
-    await axios.post('/api/file', body);
-    await download();
-    await axios.delete('/api/file');
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      await axios.post('/api/file', body);
+      await download();
+      await axios.delete('/api/file');
+    } catch (error) {
+      setMessage('something went wrong');
+      await axios.delete('/api/file');
+    }
   };
 
   return (
@@ -58,7 +59,7 @@ const FileUpload = () => {
         <div className="custom-file mb-4">
           <input
             type="file"
-            name="myImage"
+            name="myFile"
             className="custom-file-input"
             style={{ cursor: 'pointer' }}
             onChange={uploadToClient}
@@ -70,23 +71,15 @@ const FileUpload = () => {
 
         <Progress percentage={uploadPercentage} />
 
-        <input
-          id="upload-button"
-          type="submit"
-          value="Upload"
-          style={{ opacity: 0 }}
-          className="opacity-0 btn btn-primary btn-block mt-4 upload-btn"
-        />
+        {uploadPercentage === 100 && (
+          <input
+            id="upload-button"
+            type="submit"
+            value="Convert"
+            className="opacity-0 btn btn-primary btn-block mt-4"
+          />
+        )}
       </form>
-
-      {/* {isUpload && (
-        <a
-          href="/out.jsonl"
-          download
-          className="btn btn-secondary btn-block mt-4">
-          Download
-        </a>
-      )} */}
     </Fragment>
   );
 };

@@ -35,13 +35,14 @@ const deleteFile = async (req, res) => {
   return res.status(201).send('');
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (req, res) => {
   req.method === 'POST'
     ? post(req, res)
     : req.method === 'PUT'
     ? console.log('PUT')
     : req.method === 'DELETE'
-    ? deleteFile()
+    ? deleteFile(req, res)
     : req.method === 'GET'
     ? console.log('GET')
     : res.status(404).send('');
