@@ -8,7 +8,6 @@ const FileUpload = () => {
   const [filename, setFilename] = useState('Choose File');
   const [message, setMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  // const [isUpload, setIsUpload] = useState(false);
 
   const uploadToClient = async (event) => {
     try {
@@ -20,7 +19,7 @@ const FileUpload = () => {
       setUploadPercentage(100);
       setTimeout(() => {
         document.body.getElementsByClassName('upload-btn')[0].click();
-      }, 1000);
+      }, 3000);
       setMessage('Success!!');
     } catch (error) {
       setMessage('something went wrong');
@@ -48,7 +47,6 @@ const FileUpload = () => {
     const body = new FormData();
     body.append('file', image);
     await axios.post('/api/file', body);
-    // setIsUpload(true);
     await download();
     await axios.delete('/api/file');
   };
