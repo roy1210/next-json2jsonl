@@ -23,11 +23,16 @@ const saveFile = async (file) => {
     fs.createReadStream(`./public/in.json`)
       .pipe(jsonl())
       .pipe(fs.createWriteStream(`./public/out.jsonl`));
-    await fs.unlinkSync(file.path);
     return;
   } catch (e) {
     console.log(e);
   }
+};
+
+const deleteFile = async (req, res) => {
+  fs.unlinkSync(`./public/in.json`);
+  fs.unlinkSync(`./public/out.jsonl`);
+  return res.status(201).send('');
 };
 
 export default (req, res) => {
@@ -36,7 +41,7 @@ export default (req, res) => {
     : req.method === 'PUT'
     ? console.log('PUT')
     : req.method === 'DELETE'
-    ? console.log('DELETE')
+    ? deleteFile()
     : req.method === 'GET'
     ? console.log('GET')
     : res.status(404).send('');
